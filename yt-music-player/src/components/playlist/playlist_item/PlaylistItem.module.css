@@ -1,0 +1,42 @@
+.playlistItem {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.active {
+    background-color: #e6f7ff;
+}
+
+.thumbnail {
+    width: 60px;
+    height: 60px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    margin: 0 10px;
+    min-width: 0;
+}
+
+.title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.author {
+    font-size: 14px;
+    color: #666;
+}
+
+.duration {
+    font-size: 14px;
+    color: #999;
+}
