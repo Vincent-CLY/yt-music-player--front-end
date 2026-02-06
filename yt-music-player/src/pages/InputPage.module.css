@@ -1,0 +1,133 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh; /* Takes up upper half to clear space for Vinyl below */
+    width: 100%;
+    padding: 2rem;
+    box-sizing: border-box;
+    
+    translate: 0;
+    transition: translate 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s ease, opacity 0.8s ease;
+    z-index: 10;
+    position: relative;
+}
+
+.sliding {
+    translate: 0 -100%;
+    opacity: 0;
+}
+
+.title {
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 1.1;
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 3rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    letter-spacing: -0.02em;
+}
+
+.searchForm {
+    width: 100%;
+    max-width: 700px;
+    position: relative;
+}
+
+.searchWrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background: rgba(40, 44, 52, 0.6); /* Dark semi-transparent background */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 999px; /* Pill shape */
+    padding: 0.5rem;
+    padding-left: 1.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+}
+
+.searchWrapper:focus-within {
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 0 2px rgba(255, 109, 0, 0.3);
+    background: rgba(40, 44, 52, 0.8);
+}
+
+.searchIcon {
+    color: rgba(255, 255, 255, 0.5);
+    margin-right: 0.75rem;
+    min-width: 24px;
+}
+
+.searchInput {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.125rem;
+    outline: none;
+    min-width: 0; /* Prevents overflow */
+    padding: 0.5rem 0;
+}
+
+.searchInput::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.fetchButton {
+    background: #FF6D00; /* Vibrant Orange */
+    background: linear-gradient(135deg, #FF8F00 0%, #FF6D00 100%);
+    color: white;
+    border: none;
+    padding: 0.875rem 2rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+    white-space: nowrap;
+    margin-left: 0.5rem;
+}
+
+.fetchButton:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.1);
+    box-shadow: 0 4px 12px rgba(255, 109, 0, 0.4);
+}
+
+.fetchButton:active {
+    transform: translateY(0);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .title {
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .searchWrapper {
+        flex-direction: column;
+        border-radius: 20px;
+        padding: 1rem;
+    }
+    
+    .searchIcon {
+        display: none;
+    }
+    
+    .searchInput {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+    
+    .fetchButton {
+        width: 100%;
+        margin-left: 0;
+    }
+}

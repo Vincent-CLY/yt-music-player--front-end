@@ -4,9 +4,10 @@ import MusicPlayer from '../components/music_player/MusicPlayer.tsx'
 
 interface PlayerProps {
     onError: () => void;
+    onPlayStateChange: (isPlaying: boolean, color: string) => void;
 }
 
-export default function Player({ onError }: PlayerProps) {
+export default function Player({ onError, onPlayStateChange }: PlayerProps) {
     const playlistItems = localStorage.getItem('playlistItems');
     const playOrder = localStorage.getItem('playOrder');
     const [currentIndex, setCurrentIndex] = useState(() => {
@@ -44,7 +45,7 @@ export default function Player({ onError }: PlayerProps) {
 
     return (
         <div>
-            <MusicPlayer id={currentSongId} onEnded={handleNextSong} />
+            <MusicPlayer videoID={currentSongId} onPlayStateChange={onPlayStateChange} />
             <Playlist items={items} order={order} currentId={currentSongId} />
         </div>
     );

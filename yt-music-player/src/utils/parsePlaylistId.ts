@@ -4,6 +4,6 @@ export default function parsePlaylistId(url: string): string  {
     if (match && match[5]) {
         return match[5];
     } else {
-        throw new Error('Invalid YouTube playlist ID or URL');
+        return "";
     }
 }

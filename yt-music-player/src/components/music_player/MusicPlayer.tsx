@@ -1,18 +1,19 @@
-import React from 'react'
-import ReactPlayer from 'react-player'
+// Base styles for media player and provider (~400B).
+import '@vidstack/react/player/styles/base.css';
+import { MediaPlayer, MediaProvider } from '@vidstack/react';
 
 interface MusicPlayerProps {
-    id: string;
-    onEnded: () => void;
+    videoID: string;
+    onPlayStateChange: (isPlaying: boolean, color: string) => void;
 }
 
-export default function MusicPlayer({ id, onEnded }: MusicPlayerProps) {
+export default function MusicPlayer({ videoID, onPlayStateChange }: MusicPlayerProps) {
+
     return (
-        <ReactPlayer 
-            src={`https://www.youtube.com/watch?v=${id}`} 
-            playing={true}
-            controls={true}
-            onEnded={onEnded}
-        />
-    )
+
+        <MediaPlayer title="Sprite Fight" src={`youtube/${videoID}`} load="eager" // 立即載入，不等待進入視口
+  posterLoad="eager" >
+            <MediaProvider />
+        </MediaPlayer>
+    );
 }
