@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { type PlaylistItemData } from "../components/playlist/playlist_item/PlaylistItem.tsx";
 import shuffle from "../utils/shuffle.ts";
+import styles from "./FetchPage.module.css";
 
 interface FetchProps {
     playlistId: string;
     onFetchResult: (status: 'success' | 'failed', data: any) => void;
     onProgressUpdate: (current: number, total: number) => void;
+    onThumbnailReady?: () => void;
 }
 
 interface PlaylistThumbnailData {
@@ -16,7 +18,7 @@ interface PlaylistThumbnailData {
     }
 }
 
-export default function Fetch({ playlistId, onFetchResult, onProgressUpdate }: FetchProps) {
+export default function Fetch({ playlistId, onFetchResult, onProgressUpdate, onThumbnailReady }: FetchProps) {
     // UI 狀態：顯示進度
     const [playlistThumbnail, setPlaylistThumbnail] = useState('');
     const [progress, setProgress] = useState(0);
@@ -56,8 +58,21 @@ export default function Fetch({ playlistId, onFetchResult, onProgressUpdate }: F
                         currentThumbnail = data.thumbnail.url;
                         console.log("Thumbnail received:", currentThumbnail);
                         setPlaylistThumbnail(currentThumbnail);
+
+                        // Preload the image, then signal ready
+                        const img = new Image();
+                        img.onload = () => {
+                            console.log("Thumbnail image preloaded");
+                            onThumbnailReady?.();
+                        };
+                        img.onerror = () => {
+                            console.warn("Thumbnail preload failed, proceeding anyway");
+                            onThumbnailReady?.();
+                        };
+                        img.src = currentThumbnail;
                     } catch {
                         console.warn("Failed to extract playlist thumbnail.");
+                        onThumbnailReady?.();
                     } finally {
                         metaMsg = 0;
                         setStatusText('Fetching items...');
@@ -131,19 +146,23 @@ export default function Fetch({ playlistId, onFetchResult, onProgressUpdate }: F
     }, []);
 
     return (
-        <div style={{ padding: '20px' }}>
-            <h2>{statusText}</h2>
-            <img src={playlistThumbnail} alt="Playlist Thumbnail" style={{ width: '200px', height: '200px', objectFit: 'cover', borderRadius: '10px' }} />
+        <div className={styles.fetchContainer}>
+            <h2 className={styles.statusText}>{statusText}</h2>
+            <div className={styles.thumbnailWrapper}>
+                <img src={playlistThumbnail} alt="Playlist Thumbnail" className={styles.thumbnail} />
+            </div>
             {/* 簡單的進度顯示 */}
             {total > 0 && (
-                <div style={{ marginTop: '20px' }}>
-                    <p>Fetched: {progress} / ~{total}</p>
-                    <progress value={progress} max={total} style={{ width: '100%' }}></progress>
+                <div className={styles.progressSection}>
+                    <p className={styles.progressLabel}>Fetched: {progress} / ~{total}</p>
+                    <div className={styles.progressBarWrapper}>
+                        <div className={styles.progressBarFill} style={{ width: `${(progress / total) * 100}%` }} />
+                    </div>
                 </div>
             )}
             
             {/* 如果還沒拿到總數，顯示 Loading */}
-            {total === 0 && <p>Waiting for server response...</p>}
+            {total === 0 && <p className={styles.waitingText}>Waiting for server response...</p>}
         </div>
     );
 }

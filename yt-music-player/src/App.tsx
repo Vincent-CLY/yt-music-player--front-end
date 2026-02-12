@@ -33,7 +33,7 @@ function App() {
   // }
 
   const [count, setCount] = useState(0)
-  const [state, setState] = useState<'input' | 'fetch' | 'player'>('input')
+  const [state, setState] = useState<'input' | 'prefetching' | 'fetch' | 'player'>('input')
   const [inputUrl, setInputUrl] = useState('')
   const [playlistId, setPlaylistId] = useState('')
 
@@ -55,23 +55,28 @@ function App() {
             throw new Error('This playlist is unavailable or private.');
         }
 
+        // Validation passed — mount Fetch hidden to start EventSource
         setPlaylistId(playlistId)
         setVinylSpin(true)
         setFetchProgress(0)
-
-        // Trigger the transition animation
-        setIsTransitioning(true)
-        
-        // Wait for 1.2s (animation duration) before switching state
-        setTimeout(() => {
-            setState('fetch')
-            setIsTransitioning(false)
-        }, 1200)
+        setState('prefetching')
 
     } catch (error) {
         console.log(submittedUrl);
         alert((error as Error).message);
+        throw error; // Re-throw so InputPage can catch and reset button state
     }
+  }
+
+  const handleThumbnailReady = () => {
+    // Thumbnail image is loaded — now trigger the slide-out transition
+    setIsTransitioning(true)
+
+    // Wait for slide-out animation, then switch to fetch view
+    setTimeout(() => {
+        setState('fetch')
+        setIsTransitioning(false)
+    }, 1200)
   }
   
   const handleProgressUpdate = (current: number, total: number) => {
@@ -104,7 +109,7 @@ function App() {
 
   return (
     <>
-      {state === 'input' && (
+      {(state === 'input' || state === 'prefetching') && (
         <Input 
             playlistId={inputUrl} 
             onSubmit={handleUrlSubmit} 
@@ -112,8 +117,16 @@ function App() {
         />
       )}
 
-      {(state === 'fetch') && (
-        <Fetch playlistId={playlistId} onFetchResult={handleFetchResult} onProgressUpdate={handleProgressUpdate} />
+      {/* Fetch is mounted from prefetching onward — hidden until transition completes */}
+      {(state === 'prefetching' || state === 'fetch') && (
+        <div style={state === 'prefetching' ? { position: 'absolute', opacity: 0, pointerEvents: 'none' } : undefined}>
+          <Fetch 
+            playlistId={playlistId} 
+            onFetchResult={handleFetchResult} 
+            onProgressUpdate={handleProgressUpdate}
+            onThumbnailReady={handleThumbnailReady}
+          />
+        </div>
       )}
 
       {state === 'player' && (

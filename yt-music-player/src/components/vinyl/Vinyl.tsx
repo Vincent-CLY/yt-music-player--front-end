@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './Vinyl.module.css';
 
 interface VinylProps {
-    appState: 'input' | 'fetch' | 'player';
+    appState: 'input' | 'prefetching' | 'fetch' | 'player';
     progress?: number;
     isSpinning: boolean;
     isTransitioning?: boolean;
@@ -13,15 +13,18 @@ export default function Vinyl({ appState, progress = 0, isSpinning }: VinylProps
     const discColor = "#1a1a1a";
     const labelColor = "#C73D3D";
 
+    // Treat 'prefetching' the same as 'input' for vinyl positioning
+    const vinylState = appState === 'prefetching' ? 'input' : appState;
+
     return (
-        <div className={`${styles['vinyl-container']} ${styles[appState]}`} style={{ '--progress': progress } as React.CSSProperties}>
+        <div className={`${styles['vinyl-container']} ${styles[vinylState]}`} style={{ '--progress': progress } as React.CSSProperties}>
             <svg 
                 viewBox="205 1174 1136 1136" 
                 xmlns="http://www.w3.org/2000/svg" 
                 className={styles.vinyl}
                 style={{ 
-                    transform: appState === 'fetch' ? `rotate(${rollRotation}deg)` : undefined,
-                    animation: (appState === 'fetch' || !isSpinning) ? 'none' : undefined
+                    transform: vinylState === 'fetch' ? `rotate(${rollRotation}deg)` : undefined,
+                    animation: (vinylState === 'fetch' || !isSpinning) ? 'none' : undefined
                 }}
             >
             <g transform="matrix(1, 0, 0, 1, 1.1368683772161603e-13, 5.684341886080802e-14)">

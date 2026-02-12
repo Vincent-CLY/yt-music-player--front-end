@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Playlist from '../components/playlist/Playlist.tsx'
 import MusicPlayer from '../components/music_player/MusicPlayer.tsx'
+import styles from './PlayerPage.module.css';
 
 interface PlayerProps {
     onError: () => void;
@@ -44,9 +45,13 @@ export default function Player({ onError, onPlayStateChange }: PlayerProps) {
     }, [currentIndex])
 
     return (
-        <div>
-            <MusicPlayer videoID={currentSongId} onPlayStateChange={onPlayStateChange} />
-            <Playlist items={items} order={order} currentId={currentSongId} />
+        <div className={styles.playerContainer}>
+            <div className={styles.playerSection}>
+                <MusicPlayer videoID={currentSongId} onPlayStateChange={onPlayStateChange} />
+            </div>
+            <div className={styles.playlistSection}>
+                <Playlist items={items} order={order} currentId={currentSongId} />
+            </div>
         </div>
     );
 }
