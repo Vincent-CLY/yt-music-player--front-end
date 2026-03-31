@@ -3,15 +3,29 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 50vh; /* Takes up upper half to clear space for Vinyl below */
+    min-height: 50vh;
     width: 100%;
     padding: 2rem;
     box-sizing: border-box;
-    
+    position: relative;
+    z-index: 10;
+    animation: page-enter 1s var(--ease-out-expo) both;
+
     translate: 0;
     transition: translate 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s ease, opacity 0.8s ease;
-    z-index: 10;
-    position: relative;
+}
+
+@keyframes page-enter {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.98);
+        filter: blur(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
 }
 
 .sliding {
@@ -20,100 +34,405 @@
 }
 
 .title {
-    font-size: 4rem;
-    font-weight: 700;
-    line-height: 1.1;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 900;
+    line-height: 1.02;
     text-align: center;
-    color: #ffffff;
-    margin-bottom: 3rem;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    letter-spacing: -0.02em;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    letter-spacing: -0.045em;
+    background: linear-gradient(
+        180deg,
+        #ffffff 0%,
+        rgba(255, 255, 255, 0.85) 40%,
+        rgba(255, 109, 0, 0.6) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 40px rgba(255, 109, 0, 0.1));
+    animation: title-glow 4s ease-in-out infinite alternate;
+}
+
+@keyframes title-glow {
+    0% { filter: drop-shadow(0 0 30px rgba(255, 109, 0, 0.08)); }
+    100% { filter: drop-shadow(0 0 50px rgba(255, 109, 0, 0.18)); }
+}
+
+/* Subtitle added via margin below title */
+.title::after {
+    content: "Paste a playlist URL and let the vinyl spin.";
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    color: var(--text-secondary);
+    -webkit-text-fill-color: var(--text-secondary);
+    margin-top: 1.2rem;
+    margin-bottom: 1.8rem;
+    line-height: 1.6;
+    animation: subtitle-fade 1.5s ease 0.5s both;
+    filter: none;
+}
+
+@keyframes subtitle-fade {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .searchForm {
     width: 100%;
-    max-width: 700px;
+    max-width: 640px;
     position: relative;
+    animation: form-entrance 1s var(--ease-out-expo) 0.3s both;
+}
+
+@keyframes form-entrance {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .searchWrapper {
     display: flex;
     align-items: center;
     width: 100%;
-    background: rgba(40, 44, 52, 0.6); /* Dark semi-transparent background */
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 999px; /* Pill shape */
-    padding: 0.5rem;
-    padding-left: 1.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(40px) saturate(150%);
+    -webkit-backdrop-filter: blur(40px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 6px 6px 6px 22px;
+    position: relative;
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.3),
+        0 12px 48px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    transition: border-color 0.5s ease, box-shadow 0.5s ease, background 0.5s ease, transform 0.3s ease;
+}
+
+/* Animated gradient border on hover */
+.searchWrapper::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 19px;
+    padding: 1px;
+    background: linear-gradient(
+        var(--border-angle, 0deg),
+        transparent 40%,
+        rgba(255, 109, 0, 0.3) 50%,
+        rgba(178, 77, 255, 0.2) 60%,
+        transparent 70%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    animation: rotate-border 4s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rotate-border {
+    to { --border-angle: 360deg; }
+}
+
+@property --border-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+.searchWrapper:hover::before,
+.searchWrapper:focus-within::before {
+    opacity: 1;
+}
+
+.searchWrapper:hover {
+    transform: translateY(-1px);
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.3),
+        0 16px 56px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .searchWrapper:focus-within {
-    border-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 0 2px rgba(255, 109, 0, 0.3);
-    background: rgba(40, 44, 52, 0.8);
+    border-color: rgba(255, 109, 0, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.3),
+        0 16px 56px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 109, 0, 0.1),
+        0 0 60px -15px rgba(255, 109, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .searchIcon {
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--text-muted);
     margin-right: 0.75rem;
     min-width: 24px;
+    transition: color 0.4s ease, transform 0.4s ease, filter 0.4s ease;
+}
+
+.searchWrapper:focus-within .searchIcon {
+    color: var(--accent);
+    transform: scale(1.1) rotate(-8deg);
+    filter: drop-shadow(0 0 8px rgba(255, 109, 0, 0.4));
 }
 
 .searchInput {
     flex: 1;
     background: transparent;
     border: none;
-    color: white;
-    font-size: 1.125rem;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-family: inherit;
     outline: none;
-    min-width: 0; /* Prevents overflow */
-    padding: 0.5rem 0;
+    min-width: 0;
+    padding: 13px 0;
+    letter-spacing: 0.01em;
 }
 
 .searchInput::placeholder {
-    color: rgba(255, 255, 255, 0.4);
+    color: var(--text-muted);
+    transition: color 0.3s ease;
+}
+
+.searchWrapper:focus-within .searchInput::placeholder {
+    color: rgba(255, 255, 255, 0.2);
 }
 
 .fetchButton {
-    background: #FF6D00; /* Vibrant Orange */
-    background: linear-gradient(135deg, #FF8F00 0%, #FF6D00 100%);
+    background: var(--accent-gradient);
     color: white;
     border: none;
-    padding: 0.875rem 2rem;
-    border-radius: 999px;
-    font-weight: 600;
-    font-size: 1rem;
+    padding: 13px 30px;
+    border-radius: 13px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    font-family: inherit;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+    transition: transform 0.25s var(--ease-spring), box-shadow 0.4s ease, filter 0.25s ease;
     white-space: nowrap;
-    margin-left: 0.5rem;
+    box-shadow:
+        0 2px 16px rgba(255, 109, 0, 0.3),
+        0 0 0 0 rgba(255, 109, 0, 0);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Shimmer sweep over button */
+.fetchButton::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        105deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 70%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% center; }
+    100% { background-position: -200% center; }
 }
 
 .fetchButton:hover {
-    transform: translateY(-1px);
-    filter: brightness(1.1);
-    box-shadow: 0 4px 12px rgba(255, 109, 0, 0.4);
+    transform: translateY(-3px) scale(1.02);
+    filter: brightness(1.15);
+    box-shadow:
+        0 8px 30px rgba(255, 109, 0, 0.4),
+        0 0 0 4px rgba(255, 109, 0, 0.08);
 }
 
 .fetchButton:active {
-    transform: translateY(0);
+    transform: translateY(0) scale(0.97);
+    box-shadow: 0 2px 10px rgba(255, 109, 0, 0.25);
+    filter: brightness(0.95);
+}
+
+/* Validating / Disabled states */
+.validating {
+    pointer-events: none;
+}
+
+.searchInput:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.fetchButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    filter: saturate(0.5);
+    transform: none;
+    box-shadow: 0 2px 12px rgba(255, 109, 0, 0.15);
+}
+
+.fetchButton:disabled::before {
+    animation: none;
+}
+
+.fetchButton:disabled:hover {
+    transform: none;
+    box-shadow: 0 2px 12px rgba(255, 109, 0, 0.15);
+    filter: saturate(0.5);
+}
+
+/* ── Button content & text collapse ── */
+.buttonContent {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+}
+
+.buttonText {
+    display: inline-block;
+    max-width: 130px;
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 1;
+    margin-right: 4px;
+    transition:
+        max-width 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.25s ease,
+        margin 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.buttonTextHidden {
+    max-width: 0;
+    opacity: 0;
+    margin-right: 0;
+}
+
+/* ── Morph SVG icon ── */
+.morphIcon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+/* Arrow chevron — visible by default */
+.arrowStroke {
+    stroke-dasharray: 22;
+    stroke-dashoffset: 0;
+    opacity: 1;
+    transition:
+        stroke-dashoffset 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.3s ease;
+}
+
+/* Circle — hidden by default */
+.circleStroke {
+    stroke-dasharray: 42 14.55;  /* 75% dash, 25% gap */
+    stroke-dashoffset: 56.55;    /* fully hidden */
+    opacity: 0;
+    transition:
+        stroke-dashoffset 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+        opacity 0.3s ease;
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+/* Checkmark — hidden by default */
+.checkStroke {
+    stroke-dasharray: 20;
+    stroke-dashoffset: 20;
+    opacity: 0;
+    transition:
+        stroke-dashoffset 0.45s cubic-bezier(0.65, 0, 0.35, 1) 0.15s,
+        opacity 0.25s ease 0.12s;
+}
+
+/* ── Validating: arrow out, circle in + spin ── */
+.morphValidating .arrowStroke {
+    stroke-dashoffset: 22;
+    opacity: 0;
+}
+
+.morphValidating .circleStroke {
+    stroke-dashoffset: 0;
+    opacity: 1;
+    animation: circle-spin 0.75s linear infinite;
+}
+
+.morphValidating .checkStroke {
+    stroke-dashoffset: 20;
+    opacity: 0;
+    transition-delay: 0s;
+}
+
+@keyframes circle-spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* ── Success: circle out, check draws in ── */
+.morphSuccess .arrowStroke {
+    stroke-dashoffset: 22;
+    opacity: 0;
+}
+
+.morphSuccess .circleStroke {
+    stroke-dashoffset: 56.55;
+    opacity: 0;
+    animation: none;
+    transition:
+        stroke-dashoffset 0.3s ease,
+        opacity 0.15s ease;  /* fast fade to mask rotation snap */
+}
+
+.morphSuccess .checkStroke {
+    stroke-dashoffset: 0;
+    opacity: 1;
+}
+
+.fetchButtonSuccess {
+    background: linear-gradient(135deg, #00c853, #00e676) !important;
+    box-shadow:
+        0 2px 16px rgba(0, 200, 83, 0.35),
+        0 0 30px -5px rgba(0, 200, 83, 0.2) !important;
+    filter: none !important;
+    opacity: 1 !important;
+    cursor: default;
+    pointer-events: none;
 }
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .title {
-        font-size: 2.5rem;
-        margin-bottom: 2rem;
+        font-size: 2.4rem;
     }
     
     .searchWrapper {
         flex-direction: column;
         border-radius: 20px;
-        padding: 1rem;
+        padding: 16px;
+        gap: 12px;
     }
     
     .searchIcon {
@@ -123,11 +442,10 @@
     .searchInput {
         width: 100%;
         text-align: center;
-        margin-bottom: 1rem;
     }
     
     .fetchButton {
         width: 100%;
-        margin-left: 0;
+        padding: 15px 30px;
     }
 }

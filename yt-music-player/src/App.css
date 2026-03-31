@@ -1,0 +1,28 @@
+/* Attribution footer */
+.attribution-footer {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  font-size: 0.6rem;
+  opacity: 0.15;
+  transition: opacity 0.4s ease, letter-spacing 0.4s ease;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.attribution-footer:hover {
+  opacity: 0.5;
+  letter-spacing: 0.08em;
+}
+.attribution-footer a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  background: linear-gradient(90deg, var(--text-secondary), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: -webkit-text-fill-color 0.3s ease;
+}
+.attribution-footer:hover a {
+  -webkit-text-fill-color: transparent;
+}

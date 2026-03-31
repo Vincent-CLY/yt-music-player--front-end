@@ -47,19 +47,43 @@ export default function Input({ playlistId, onSubmit, isTransitioning }: InputPr
                         className={`${styles.fetchButton} ${buttonState === 'success' ? styles.fetchButtonSuccess : ''}`}
                         disabled={isBusy || isTransitioning}
                     >
-                        {buttonState === 'validating' ? (
-                            <span className={styles.buttonContent}>
-                                <svg className={styles.spinner} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2.5" strokeDasharray="50 20" strokeLinecap="round" />
-                                </svg>
+                        <span className={styles.buttonContent}>
+                            <span className={`${styles.buttonText} ${buttonState !== 'idle' ? styles.buttonTextHidden : ''}`}>
                             </span>
-                        ) : buttonState === 'success' ? (
-                            <span className={styles.buttonContent}>
-                                <svg className={styles.checkmark} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M4 12.5l5.5 5.5L20 6" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                            </span>
-                        ) : 'Fetch Playlist'}
+                            <svg
+                                className={`${styles.morphIcon} ${
+                                    buttonState === 'validating' ? styles.morphValidating :
+                                    buttonState === 'success' ? styles.morphSuccess : ''
+                                }`}
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    className={styles.arrowStroke}
+                                    d="M10 6l8 6-8 6"
+                                    stroke="currentColor"
+                                    strokeWidth="2.5"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                                <circle
+                                    className={styles.circleStroke}
+                                    cx="12" cy="12" r="9"
+                                    stroke="currentColor"
+                                    strokeWidth="2.5"
+                                    strokeLinecap="round"
+                                />
+                                <path
+                                    className={styles.checkStroke}
+                                    d="M6 12.5l4 4 8-9"
+                                    stroke="currentColor"
+                                    strokeWidth="2.5"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
+                        </span>
                     </button>
                 </div>
             </form>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import Playlist from '../components/playlist/Playlist.tsx'
 import MusicPlayer from '../components/music_player/MusicPlayer.tsx'
 import styles from './PlayerPage.module.css';
@@ -17,32 +17,41 @@ export default function Player({ onError, onPlayStateChange }: PlayerProps) {
     });
     const [loop, setLoop] = useState(false);
 
-    if (!playlistItems || !playOrder) {
-        onError();
-        return null;
-    }
+    const items = useMemo(() => playlistItems ? JSON.parse(playlistItems) : null, [playlistItems]);
+    const order = useMemo(() => playOrder ? JSON.parse(playOrder) : null, [playOrder]);
 
-    const items = JSON.parse(playlistItems);
-    const order = JSON.parse(playOrder);
+    const handlePlaylistItemClick = useCallback((id: string) => {
+        if (!items || !order) return;
+        const orderIndex = order.findIndex((i: number) => items[i].id === id);
+        if (orderIndex !== -1) {
+            setCurrentIndex(orderIndex);
+        }
+    }, [items, order]);
 
-    const currentSongId = items[order[currentIndex]].id;
-
-    const handleNextSong = () => {
+    const handleNextSong = useCallback(() => {
         setCurrentIndex((prevIndex) => {
+            if (!order) return prevIndex;
             if (loop) {
                 return (prevIndex + 1) % order.length;
             }
             if (prevIndex + 1 >= order.length) {
                 onError();
-                return prevIndex; // stay at the last song
+                return prevIndex;
             }
             return prevIndex + 1;
         });
-    };
+    }, [order, loop, onError]);
 
     useEffect(() => {
         localStorage.setItem('currentIndex', currentIndex.toString());
-    }, [currentIndex])
+    }, [currentIndex]);
+
+    if (!items || !order) {
+        onError();
+        return null;
+    }
+
+    const currentSongId = items[order[currentIndex]].id;
 
     return (
         <div className={styles.playerContainer}>
@@ -50,7 +59,7 @@ export default function Player({ onError, onPlayStateChange }: PlayerProps) {
                 <MusicPlayer videoID={currentSongId} onPlayStateChange={onPlayStateChange} />
             </div>
             <div className={styles.playlistSection}>
-                <Playlist items={items} order={order} currentId={currentSongId} />
+                <Playlist items={items} order={order} currentId={currentSongId} onItemClick={handlePlaylistItemClick} />
             </div>
         </div>
     );

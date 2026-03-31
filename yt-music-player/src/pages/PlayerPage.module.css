@@ -1,0 +1,101 @@
+.playerContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100vh;
+    padding: 1.5rem 2rem 2rem;
+    position: relative;
+    z-index: 10;
+    gap: 1.5rem;
+    animation: player-enter 0.9s var(--ease-out-expo) both;
+}
+
+@keyframes player-enter {
+    from {
+        opacity: 0;
+        transform: scale(0.97);
+        filter: blur(6px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+}
+
+/* Glass panel effect for both sections */
+.playerSection {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(30px) saturate(120%);
+    -webkit-backdrop-filter: blur(30px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    padding: 1.25rem;
+    box-shadow:
+        0 8px 40px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Accent glow at top of player section */
+.playerSection::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20%;
+    right: 20%;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 109, 0, 0.4),
+        rgba(178, 77, 255, 0.3),
+        transparent
+    );
+    pointer-events: none;
+}
+
+.playlistSection {
+    background: rgba(255, 255, 255, 0.015);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 20px;
+    padding: 0.5rem;
+    max-height: 55vh;
+    overflow-y: auto;
+    box-shadow:
+        0 4px 24px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    animation: playlist-slide 0.8s var(--ease-out-expo) 0.2s both;
+}
+
+@keyframes playlist-slide {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Fade edges at top/bottom of scrollable playlist */
+.playlistSection {
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 3%,
+        black 97%,
+        transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 3%,
+        black 97%,
+        transparent 100%
+    );
+}

@@ -1,0 +1,183 @@
+.fetchContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    padding: 2rem;
+    position: relative;
+    z-index: 10;
+    animation: fetch-enter 0.8s var(--ease-out-expo) both;
+}
+
+@keyframes fetch-enter {
+    from {
+        opacity: 0;
+        transform: translateY(40px) scale(0.95);
+        filter: blur(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+    }
+}
+
+.statusText {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    background: linear-gradient(135deg, #fff 0%, rgba(255, 109, 0, 0.8) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: status-pulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes status-pulse {
+    0% {
+        filter: drop-shadow(0 0 10px rgba(255, 109, 0, 0.1));
+        opacity: 0.85;
+    }
+    100% {
+        filter: drop-shadow(0 0 25px rgba(255, 109, 0, 0.25));
+        opacity: 1;
+    }
+}
+
+.thumbnailWrapper {
+    position: relative;
+    margin-bottom: 2rem;
+    animation: thumb-float 3s ease-in-out infinite alternate;
+}
+
+@keyframes thumb-float {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-8px); }
+}
+
+.thumbnail {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 16px;
+    box-shadow:
+        0 8px 40px rgba(0, 0, 0, 0.5),
+        0 0 60px -10px rgba(255, 109, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* Holographic border ring */
+.thumbnailWrapper::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 18px;
+    padding: 3px;
+    background: conic-gradient(
+        from var(--holo-angle, 0deg),
+        rgba(255, 109, 0, 0.5),
+        rgba(178, 77, 255, 0.4),
+        rgba(0, 229, 255, 0.4),
+        rgba(255, 109, 0, 0.5)
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: holo-spin 3s linear infinite;
+}
+
+@property --holo-angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes holo-spin {
+    to { --holo-angle: 360deg; }
+}
+
+.progressSection {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    animation: progress-fade 0.6s ease 0.4s both;
+}
+
+@keyframes progress-fade {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.progressLabel {
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-secondary);
+    letter-spacing: 0.04em;
+}
+
+.progressBarWrapper {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.progressBarFill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #ff8f00, #ff5500, #ff3d00);
+    box-shadow:
+        0 0 14px rgba(255, 109, 0, 0.5),
+        0 0 40px rgba(255, 109, 0, 0.2);
+    transition: width 0.5s var(--ease-out-expo);
+    position: relative;
+}
+
+/* Animated shimmer on progress fill */
+.progressBarFill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer-bar 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer-bar {
+    0% { background-position: 200% center; }
+    100% { background-position: -200% center; }
+}
+
+.waitingText {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    animation: waiting-blink 1.5s ease-in-out infinite;
+    letter-spacing: 0.03em;
+}
+
+@keyframes waiting-blink {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.9; }
+}
